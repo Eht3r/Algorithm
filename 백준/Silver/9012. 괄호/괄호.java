@@ -24,6 +24,7 @@ public class Main {
                 } else {
                     if (stack.empty()) {
                         isValid = false;
+                        break;
                     } else {
                         stack.pop();
                     }
