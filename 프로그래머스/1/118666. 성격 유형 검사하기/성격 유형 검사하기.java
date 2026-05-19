@@ -15,9 +15,6 @@ class Solution {
                 char personality = survey[i].charAt(1);
                 int score = choices[i] - 4;
                 map.put(personality, map.getOrDefault(personality, 0) + score);
-            } else {
-                map.put(survey[i].charAt(0), map.getOrDefault(survey[i].charAt(0), 0));
-                map.put(survey[i].charAt(1), map.getOrDefault(survey[i].charAt(1), 0));
             }
         }
         
