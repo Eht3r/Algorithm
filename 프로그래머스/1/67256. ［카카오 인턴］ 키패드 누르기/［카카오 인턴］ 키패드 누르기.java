@@ -28,74 +28,75 @@
  * - 오른손을 사용한 경우 'R'을 붙인다.
  */
 class Solution {
+    private static final int[][] KEYPAD = {
+        {3, 1}, // 0
+        {0, 0}, // 1
+        {0, 1}, // 2
+        {0, 2}, // 3
+        {1, 0}, // 4
+        {1, 1}, // 5
+        {1, 2}, // 6
+        {2, 0}, // 7
+        {2, 1}, // 8
+        {2, 2}  // 9
+    };
+    
     public String solution(int[] numbers, String hand) {
-        StringBuilder sb = new StringBuilder();
-        int[][] keypad = {
-            {3, 1}, // 0
-            {0, 0}, // 1
-            {0, 1}, // 2
-            {0, 2}, // 3
-            {1, 0}, // 4
-            {1, 1}, // 5
-            {1, 2}, // 6
-            {2, 0}, // 7
-            {2, 1}, // 8
-            {2, 2}  // 9
-        };
+        StringBuilder answer = new StringBuilder();
         
-        // *
-        int leftRow = 3;
-        int leftCol = 0;
+        int[] left = {3, 0}; // * 
+        int[] right = {3, 2}; // #
         
-        // #
-        int rightRow = 3;
-        int rightCol = 2;
-        
-        for (int i = 0; i < numbers.length; i++) {
-            int num = numbers[i];
-            
-            switch (num) {
-                case 1, 4, 7 -> {
-                    leftRow = keypad[num][0];
-                    leftCol = keypad[num][1];
-                    sb.append("L");
-                }
-                case 3, 6, 9 -> {
-                    rightRow = keypad[num][0];
-                    rightCol = keypad[num][1];
-                    sb.append("R");
-                }
-                default -> {
-                    int row = keypad[num][0];
-                    int col = keypad[num][1];
-                    
-                    int leftDistance = Math.abs(leftRow - row) + Math.abs(leftCol - col);
-                    int rightDistance = Math.abs(rightRow - row) + Math.abs(rightCol - col);
-                    
-                    if (leftDistance < rightDistance) {
-                        sb.append("L");
-                        leftRow = row;
-                        leftCol = col;
-                    } else if (leftDistance > rightDistance) {
-                        sb.append("R");
-                        rightRow = row;
-                        rightCol = col;
-                    } else {
-                        if (hand.equals("left")) {
-                            sb.append("L");
-                            leftRow = row;
-                            leftCol = col;
-                        } else if (hand.equals("right")) {
-                            sb.append("R");
-                            rightRow = row;
-                            rightCol = col;
-                        }
+        for (int num : numbers) {
+            if(isLeftKey(num)) {
+                answer.append("L");
+                move(left, num);
+            } else if (isRightKey(num)) {
+                answer.append("R");
+                move(right, num);
+            } else {
+                int leftDistance = distance(left, num);
+                int rightDistance = distance(right, num);
+                
+                if (leftDistance < rightDistance) {
+                    answer.append("L");
+                    move(left, num);
+                } else if(leftDistance > rightDistance) {
+                    answer.append("R");
+                    move(right, num);
+                } else {
+                    if (hand.equals("left")) {
+                        answer.append("L");
+                        move(left, num);
+                    } else if (hand.equals("right")) {
+                        answer.append("R");
+                        move(right, num);
                     }
                 }
-                    
             }
         }
         
-        return sb.toString();
+        return answer.toString();
+    }
+    
+    private boolean isLeftKey(int num) {
+        return num == 1 || num == 4 || num == 7;
+    }
+    
+    private boolean isRightKey(int num) {
+        return num == 3 || num == 6 || num == 9;
+    }
+    
+    private int distance(int[] handPosition, int num) {
+        int row = KEYPAD[num][0];
+        int col = KEYPAD[num][1];
+        
+        return Math.abs(handPosition[0] - row)
+            + Math.abs(handPosition[1] - col);
+    }
+    
+    private void move(int[] handPosition, int num) {
+        handPosition[0] = KEYPAD[num][0];
+        handPosition[1] = KEYPAD[num][1];
     }
 }
