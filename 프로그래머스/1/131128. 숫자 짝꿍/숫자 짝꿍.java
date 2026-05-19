@@ -1,17 +1,9 @@
 class Solution {
     public String solution(String X, String Y) {
-        int[] xCount = new int[10];
-        int[] yCount = new int[10];
+        int[] xCount = countDigits(X);
+        int[] yCount = countDigits(Y);
         
         StringBuilder answer = new StringBuilder();
-        
-        for (char ch : X.toCharArray()) {
-            xCount[ch - '0']++;
-        }
-        
-        for (char ch : Y.toCharArray()) {
-            yCount[ch - '0']++;
-        }
         
         for (int i = 9; i >= 0; i--) {
             int repeat = Math.min(xCount[i], yCount[i]);
@@ -21,6 +13,20 @@ class Solution {
             }
         }
         
+        return formatAnswer(answer);
+    }
+    
+    private int[] countDigits(String number) {
+        int[] count = new int[10];
+        
+        for (int i = 0; i < number.length(); i++) {
+            count[number.charAt(i) - '0']++;
+        }
+        
+        return count;
+    }
+    
+    private String formatAnswer(StringBuilder answer) {
         if (answer.length() == 0) {
             return "-1";
         }
